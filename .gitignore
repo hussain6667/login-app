@@ -27,3 +27,4 @@ node_modules/
 !.env.example
 build/
 dist/
+login-app.zip
