@@ -13,24 +13,23 @@ const Footer = () => {
   // FOOTER DATA
   // ===============================
 
-  const company = [
-    { name: "Home", path: "/" },
-    { name: "About Us", path: "/AboutUs" },
-    { name: "Our Services", path: "/AboutUs" },
-    { name: "Portfolio", path: "/Portfolio" },
-    { name: "Contact Us", path: "/ContactUs" }
-  ];
-
+const company = [
+  { name: "Home", path: "/" },
+  { name: "About Us", path: "/about" },
+  { name: "Our Services", path: "/services" },
+  { name: "Portfolio", path: "/portfolio" },
+  { name: "Contact Us", path: "/contact" }
+];
   const services = [
-    { name: "Software Development", path: "/SoftwareDev" },
-    { name: "Website Development", path: "/WebsiteDev" },
-    { name: "Application Development", path: "/ApplicationDev" },
-    { name: "Access Control System", path: "/AccessControl" },
-    { name: "CCTV Surveillance", path: "/CCTV" },
-    { name: "Graphic Designing", path: "/GraphicDesign" },
-    { name: "Digital Marketing", path: "/DigitalMarketing" },
-    { name: "Networking", path: "/Networking" }
-  ];
+  { name: "Software Development", path: "/software-dev" },
+  { name: "Website Development", path: "/website-dev" },
+  { name: "Application Development", path: "/application-dev" },
+  { name: "Access Control System", path: "/AccessControl" },
+  { name: "CCTV Surveillance", path: "/CCTV" },
+  { name: "Graphic Designing", path: "/graphic-designing" },
+  { name: "Digital Marketing", path: "/digital-marketing" },
+  { name: "Networking", path: "/networking" }
+];
 
   const phones = [
     "048-3768405",

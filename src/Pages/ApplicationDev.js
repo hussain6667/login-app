@@ -1,6 +1,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useAnimation, useInView } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useAnimation,
+  useInView
+} from "framer-motion";
 
 // REUSABLE SCROLL ANIMATION
 const Reveal = ({ children, delay = 0, className = "" }) => {
@@ -14,17 +19,15 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
         ? {
             opacity: 1,
             y: 0,
-            scale: 1,
             transition: {
-              duration: 0.55,
+              duration: 0.4,
               delay,
-              ease: [0.22, 1, 0.36, 1],
-            },
+              ease: "easeOut"
+            }
           }
         : {
             opacity: 0,
-            y: 35,
-            scale: 0.97,
+            y: 22
           }
     );
   }, [isInView, controls, delay]);
@@ -33,7 +36,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 35, scale: 0.97 }}
+      initial={{ opacity: 0, y: 22 }}
       animate={controls}
     >
       {children}
@@ -41,20 +44,231 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
   );
 };
 
+const services = [
+  {
+    icon: "📱",
+    title: "Android App Development",
+    desc: "We develop user-friendly Android applications with modern features and smooth performance.",
+    details:
+      "We create powerful Android applications designed to provide a smooth and engaging experience on smartphones and tablets. Our applications are developed with modern technologies and business-focused functionality.",
+    features: [
+      "Custom Android application development",
+      "Modern and attractive user interfaces",
+      "User registration and login systems",
+      "Push notifications integration",
+      "API and database integration",
+      "Google Play Store preparation"
+    ],
+    technologies: ["Kotlin", "Java", "React Native", "Firebase", "Node.js"],
+    process: [
+      "Understand application requirements",
+      "Design Android application screens",
+      "Develop application functionality",
+      "Test on different Android devices",
+      "Prepare and launch the application"
+    ]
+  },
+  {
+    icon: "🍎",
+    title: "iOS App Development",
+    desc: "We create professional iPhone and iPad applications with attractive designs and great performance.",
+    details:
+      "Our iOS development service focuses on creating professional applications for Apple devices. We build clean, responsive and easy-to-use applications that deliver a reliable user experience.",
+    features: [
+      "Custom iPhone and iPad applications",
+      "Apple-friendly UI/UX design",
+      "Secure login and authentication",
+      "Push notifications",
+      "Backend and API integration",
+      "App Store deployment preparation"
+    ],
+    technologies: ["Swift", "SwiftUI", "React Native", "Firebase", "Node.js"],
+    process: [
+      "Discuss your application idea",
+      "Prepare iOS screen designs",
+      "Develop application features",
+      "Test on Apple devices",
+      "Prepare App Store release"
+    ]
+  },
+  {
+    icon: "🌐",
+    title: "Cross-Platform Apps",
+    desc: "We build applications that work on both Android and iOS using a single codebase.",
+    details:
+      "Cross-platform development allows businesses to reach Android and iOS users with one application codebase. We build applications that offer consistent functionality and a smooth experience across devices.",
+    features: [
+      "Single codebase for multiple platforms",
+      "Consistent Android and iOS experience",
+      "Responsive application layouts",
+      "API and database integration",
+      "Reusable application components",
+      "Easy updates and maintenance"
+    ],
+    technologies: ["React Native", "Flutter", "JavaScript", "Firebase", "Node.js"],
+    process: [
+      "Define platform requirements",
+      "Design reusable app interfaces",
+      "Build cross-platform functionality",
+      "Test on Android and iOS",
+      "Publish application releases"
+    ]
+  },
+  {
+    icon: "🛒",
+    title: "E-Commerce Applications",
+    desc: "We develop online shopping apps with product listings, carts and secure checkout features.",
+    details:
+      "We develop modern shopping applications that help businesses sell products online. Customers can browse products, manage shopping carts, place orders and track their purchases through an easy-to-use application.",
+    features: [
+      "Product listing and categories",
+      "Shopping cart functionality",
+      "Customer registration and login",
+      "Order placement and tracking",
+      "Payment gateway integration",
+      "Admin and product management"
+    ],
+    technologies: ["React Native", "Flutter", "Node.js", "MongoDB", "MySQL"],
+    process: [
+      "Plan shopping app requirements",
+      "Design product and checkout screens",
+      "Develop shopping functionality",
+      "Integrate payment and backend",
+      "Test and launch the application"
+    ]
+  },
+  {
+    icon: "💬",
+    title: "Social Media Applications",
+    desc: "We create interactive social applications with messaging, profiles and user engagement features.",
+    details:
+      "We build interactive social applications where users can create profiles, share content, communicate and connect with others. Our focus is on smooth interaction, secure user accounts and engaging features.",
+    features: [
+      "User profiles and account management",
+      "Posts, images and content sharing",
+      "Real-time messaging functionality",
+      "Likes, comments and notifications",
+      "Follow and friend systems",
+      "Privacy and account security"
+    ],
+    technologies: ["React Native", "Firebase", "Node.js", "MongoDB", "Socket.io"],
+    process: [
+      "Plan social application features",
+      "Design profile and feed screens",
+      "Develop social functionality",
+      "Integrate messaging and notifications",
+      "Test and publish the application"
+    ]
+  },
+  {
+    icon: "🔧",
+    title: "App Maintenance",
+    desc: "We update applications, fix bugs and improve security and performance.",
+    details:
+      "We help keep your existing mobile application updated, secure and reliable. Our maintenance service focuses on fixing issues, improving performance and keeping your app compatible with modern devices.",
+    features: [
+      "Application bug fixing",
+      "Performance improvements",
+      "Security updates",
+      "Operating system compatibility",
+      "Feature updates and enhancements",
+      "Regular application monitoring"
+    ],
+    technologies: ["React Native", "Flutter", "Kotlin", "Swift", "Firebase"],
+    process: [
+      "Review the existing application",
+      "Identify bugs and improvements",
+      "Apply required updates",
+      "Test updated functionality",
+      "Deliver the improved application"
+    ]
+  }
+];
+
 const ApplicationDev = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     appType: "",
-    message: "",
+    message: ""
   });
 
   const [success, setSuccess] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+
+  const technologies = [
+    "React Native",
+    "Flutter",
+    "Kotlin",
+    "Swift",
+    "Java",
+    "Firebase",
+    "Node.js",
+    "MongoDB"
+  ];
+
+  const reasons = [
+    "Modern and attractive app designs",
+    "Easy-to-use interfaces",
+    "Fast and smooth performance",
+    "Android and iOS compatibility",
+    "Secure application development",
+    "Regular updates and support"
+  ];
+
+  const steps = [
+    {
+      number: "01",
+      title: "Planning",
+      desc: "We understand your app idea, target audience and project requirements."
+    },
+    {
+      number: "02",
+      title: "UI/UX Design",
+      desc: "We design attractive screens that are simple and easy to use."
+    },
+    {
+      number: "03",
+      title: "Development",
+      desc: "Our developers build the application using modern technologies."
+    },
+    {
+      number: "04",
+      title: "Testing",
+      desc: "We test the application and fix bugs to ensure smooth performance."
+    },
+    {
+      number: "05",
+      title: "Launch",
+      desc: "We prepare and publish your application for users."
+    }
+  ];
+
+  const platforms = [
+    {
+      icon: "🤖",
+      title: "Android Applications",
+      desc: "Powerful Android apps designed for smartphones and tablets with smooth functionality.",
+      tag: "Android Development"
+    },
+    {
+      icon: "🍎",
+      title: "iOS Applications",
+      desc: "Professional applications for iPhone and iPad with a clean and modern user experience.",
+      tag: "iOS Development"
+    },
+    {
+      icon: "🔄",
+      title: "Cross-Platform Apps",
+      desc: "Applications that work across multiple platforms with shared development code.",
+      tag: "Cross-Platform Development"
+    }
+  ];
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
     setSuccess(false);
   };
@@ -67,7 +281,7 @@ const ApplicationDev = () => {
       name: "",
       email: "",
       appType: "",
-      message: "",
+      message: ""
     });
   };
 
@@ -75,111 +289,39 @@ const ApplicationDev = () => {
     if (!success) return;
 
     const timer = setTimeout(() => setSuccess(false), 5000);
-
     return () => clearTimeout(timer);
   }, [success]);
 
-  const services = [
-    {
-      icon: "📱",
-      title: "Android App Development",
-      desc: "We develop user-friendly Android applications with modern features and smooth performance.",
-    },
-    {
-      icon: "🍎",
-      title: "iOS App Development",
-      desc: "We create professional iPhone and iPad applications with attractive designs and great performance.",
-    },
-    {
-      icon: "🌐",
-      title: "Cross-Platform Apps",
-      desc: "We build applications that work on both Android and iOS using a single codebase.",
-    },
-    {
-      icon: "🛒",
-      title: "E-Commerce Applications",
-      desc: "We develop online shopping apps with product listings, carts and secure checkout features.",
-    },
-    {
-      icon: "💬",
-      title: "Social Media Applications",
-      desc: "We create interactive social applications with messaging, profiles and user engagement features.",
-    },
-    {
-      icon: "🔧",
-      title: "App Maintenance",
-      desc: "We update applications, fix bugs and improve security and performance.",
-    },
-  ];
+  // MODAL ESCAPE KEY AND BODY SCROLL
+  useEffect(() => {
+    if (!selectedService) return;
 
-  const technologies = [
-    "React Native",
-    "Flutter",
-    "Kotlin",
-    "Swift",
-    "Java",
-    "Firebase",
-    "Node.js",
-    "MongoDB",
-  ];
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        setSelectedService(null);
+      }
+    };
 
-  const reasons = [
-    "Modern and attractive app designs",
-    "Easy-to-use interfaces",
-    "Fast and smooth performance",
-    "Android and iOS compatibility",
-    "Secure application development",
-    "Regular updates and support",
-  ];
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscape);
 
-  const steps = [
-    {
-      number: "01",
-      title: "Planning",
-      desc: "We understand your app idea, target audience and project requirements.",
-    },
-    {
-      number: "02",
-      title: "UI/UX Design",
-      desc: "We design attractive screens that are simple and easy to use.",
-    },
-    {
-      number: "03",
-      title: "Development",
-      desc: "Our developers build the application using modern technologies.",
-    },
-    {
-      number: "04",
-      title: "Testing",
-      desc: "We test the application and fix bugs to ensure smooth performance.",
-    },
-    {
-      number: "05",
-      title: "Launch",
-      desc: "We prepare and publish your application for users.",
-    },
-  ];
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [selectedService]);
 
-  const platforms = [
-    {
-      icon: "🤖",
-      title: "Android Applications",
-      desc: "Powerful Android apps designed for smartphones and tablets with smooth functionality.",
-      tag: "Android Development",
-    },
-    {
-      icon: "🍎",
-      title: "iOS Applications",
-      desc: "Professional applications for iPhone and iPad with a clean and modern user experience.",
-      tag: "iOS Development",
-    },
-    {
-      icon: "🔄",
-      title: "Cross-Platform Apps",
-      desc: "Applications that work across multiple platforms with shared development code.",
-      tag: "Cross-Platform Development",
-    },
-  ];
+  const goToContact = () => {
+    setSelectedService(null);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById("app-contact")?.scrollIntoView({
+          behavior: "smooth"
+        });
+      });
+    });
+  };
 
   return (
     <div className="application-page">
@@ -198,6 +340,10 @@ const ApplicationDev = () => {
           box-sizing: border-box;
         }
 
+        .application-page section {
+          position: relative;
+        }
+
         .app-tag {
           color: var(--app-primary);
           font-size: 13px;
@@ -205,8 +351,23 @@ const ApplicationDev = () => {
           letter-spacing: 2px;
         }
 
-        .application-page section {
-          position: relative;
+        .app-btn {
+          display: inline-block;
+          padding: 15px 26px;
+          background: var(--app-primary);
+          color: white;
+          border: 1px solid var(--app-primary);
+          border-radius: 7px;
+          text-decoration: none;
+          font-weight: 700;
+          transition: .25s ease;
+        }
+
+        .app-btn:hover {
+          background: var(--app-dark);
+          border-color: var(--app-dark);
+          color: white;
+          transform: translateY(-3px);
         }
 
         /* HERO */
@@ -256,30 +417,10 @@ const ApplicationDev = () => {
           margin-top: 30px;
         }
 
-        .app-btn {
-          display: inline-block;
-          padding: 15px 26px;
-          background: var(--app-primary);
-          color: white;
-          border: 1px solid var(--app-primary);
-          border-radius: 5px;
-          text-decoration: none;
-          font-weight: 700;
-          transition: .3s ease;
-        }
-
-        .app-btn:hover {
-          background: var(--app-dark);
-          border-color: var(--app-dark);
-          color: white;
-        }
-
         .app-btn-outline {
           background: transparent;
           color: var(--app-dark);
         }
-
-        /* PHONE MOCKUP */
 
         .app-hero-visual {
           flex: 1;
@@ -299,12 +440,12 @@ const ApplicationDev = () => {
           border-radius: 35px;
           overflow: hidden;
           box-shadow: 0 20px 50px rgba(0,0,0,.18);
-          animation: phoneFloat 4s ease-in-out infinite;
+          animation: appPhoneFloat 4s ease-in-out infinite;
         }
 
-        @keyframes phoneFloat {
+        @keyframes appPhoneFloat {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
+          50% { transform: translateY(-10px); }
         }
 
         .app-phone-top {
@@ -334,9 +475,7 @@ const ApplicationDev = () => {
           margin-bottom: 18px;
         }
 
-        .app-phone-content h3 {
-          margin: 0 0 5px;
-        }
+        .app-phone-content h3 { margin: 0 0 5px; }
 
         .app-phone-content > p {
           color: #888;
@@ -352,17 +491,15 @@ const ApplicationDev = () => {
           border: 1px solid #eee;
           border-radius: 8px;
           margin-bottom: 10px;
-          transition: .3s;
+          transition: .25s;
         }
 
         .app-phone-box:hover {
-          transform: translateX(5px);
+          transform: translateX(4px);
           border-color: var(--app-primary);
         }
 
-        .app-phone-box > span {
-          font-size: 23px;
-        }
+        .app-phone-box > span { font-size: 23px; }
 
         .app-phone-box strong,
         .app-phone-box small {
@@ -396,12 +533,12 @@ const ApplicationDev = () => {
           box-shadow: 0 10px 30px rgba(0,0,0,.1);
           font-size: 12px;
           font-weight: bold;
-          animation: floatCard 3s ease-in-out infinite;
+          animation: appFloat 3s ease-in-out infinite;
         }
 
-        @keyframes floatCard {
+        @keyframes appFloat {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+          50% { transform: translateY(-7px); }
         }
 
         .app-floating-card span {
@@ -438,17 +575,9 @@ const ApplicationDev = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-          animation: circlePulse 3s ease-in-out infinite;
         }
 
-        @keyframes circlePulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(214,110,30,.2); }
-          50% { box-shadow: 0 0 0 18px rgba(214,110,30,0); }
-        }
-
-        .app-about-circle span {
-          font-size: 100px;
-        }
+        .app-about-circle span { font-size: 100px; }
 
         .app-about-small-card {
           position: absolute;
@@ -481,7 +610,7 @@ const ApplicationDev = () => {
           margin-top: 15px;
         }
 
-        /* COMMON HEADING */
+        /* SECTION HEADINGS */
 
         .app-section-heading {
           text-align: center;
@@ -514,34 +643,62 @@ const ApplicationDev = () => {
         }
 
         .app-service-card {
+          width: 100%;
+          height: 100%;
           padding: 30px;
           background: white;
           border: 1px solid #eee;
-          border-radius: 10px;
-          transition: .3s ease;
-          height: 100%;
+          border-radius: 13px;
+          text-align: left;
+          font: inherit;
+          color: inherit;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+
+        .app-service-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 3px;
+          width: 0;
+          background: var(--app-primary);
+          transition: width .25s ease;
+        }
+
+        .app-service-card:hover::before {
+          width: 100%;
         }
 
         .app-service-card:hover {
-          border-color: var(--app-primary);
+          transform: translateY(-8px);
+          border-color: #d66e3070;
           box-shadow: 0 15px 35px rgba(0,0,0,.08);
         }
 
+        .app-service-card:focus-visible {
+          outline: 3px solid #d66e3060;
+          outline-offset: 3px;
+        }
+
         .app-service-icon {
-          width: 60px;
-          height: 60px;
+          width: 62px;
+          height: 62px;
           display: flex;
           align-items: center;
           justify-content: center;
           background: #fff0e4;
-          border-radius: 10px;
-          font-size: 28px;
+          border-radius: 12px;
+          font-size: 29px;
           margin-bottom: 20px;
-          transition: .3s;
+          transition: .25s;
         }
 
         .app-service-card:hover .app-service-icon {
-          transform: rotate(8deg) scale(1.08);
+          transform: rotate(-7deg) scale(1.08);
         }
 
         .app-service-card h3 {
@@ -553,21 +710,206 @@ const ApplicationDev = () => {
           color: #777;
           font-size: 14px;
           line-height: 1.8;
+          margin-bottom: 18px;
         }
 
-        .app-service-card a {
+        .app-learn-more {
           display: inline-block;
-          margin-top: 10px;
           color: var(--app-primary);
-          text-decoration: none;
-          font-weight: bold;
+          font-weight: 800;
+          font-size: 14px;
+        }
+
+        /* MODAL */
+
+        .app-modal-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 99999;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 18px;
+          background: rgba(12,15,20,.78);
+        }
+
+        .app-modal {
+          width: 100%;
+          max-width: 760px;
+          max-height: 90vh;
+          overflow-y: auto;
+          background: white;
+          border-radius: 17px;
+          position: relative;
+          box-shadow: 0 20px 70px rgba(0,0,0,.25);
+          scrollbar-width: thin;
+          scrollbar-color: var(--app-primary) #eee;
+        }
+
+        .app-modal-header {
+          position: relative;
+          padding: 32px;
+          padding-right: 75px;
+          background: linear-gradient(120deg, #fff2e8, #fff);
+          border-bottom: 1px solid #f1e5dc;
+        }
+
+        .app-modal-icon {
+          width: 65px;
+          height: 65px;
+          display: grid;
+          place-items: center;
+          border-radius: 14px;
+          background: white;
+          box-shadow: 0 5px 18px #0000000c;
+          font-size: 32px;
+          margin-bottom: 17px;
+        }
+
+        .app-modal-header h2 {
+          font-size: 27px;
+          margin: 10px 0;
+          color: #212529;
+        }
+
+        .app-modal-header p {
+          color: #777;
+          line-height: 1.7;
+          margin: 0;
+          font-size: 14px;
+        }
+
+        .app-modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 42px;
+          height: 42px;
+          border: none;
+          border-radius: 50%;
+          background: white;
+          color: #333;
+          font-size: 25px;
+          cursor: pointer;
+          box-shadow: 0 3px 12px #00000012;
+          transition: .2s;
+        }
+
+        .app-modal-close:hover {
+          background: var(--app-primary);
+          color: white;
+          transform: rotate(90deg);
+        }
+
+        .app-modal-body { padding: 30px 32px; }
+
+        .app-modal-body h3 {
+          font-size: 18px;
+          margin: 0 0 17px;
+          color: #222;
+        }
+
+        .app-modal-description {
+          color: #777;
+          line-height: 1.9;
+          font-size: 14px;
+          margin: 0 0 27px;
+        }
+
+        .app-modal-feature-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 13px;
+          margin-bottom: 28px;
+        }
+
+        .app-modal-feature {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          color: #555;
+          font-size: 13px;
+          line-height: 1.6;
+        }
+
+        .app-modal-feature span {
+          color: var(--app-primary);
+          font-weight: 900;
+        }
+
+        .app-modal-tech {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 9px;
+          margin-bottom: 28px;
+        }
+
+        .app-modal-tech span {
+          padding: 9px 14px;
+          border-radius: 25px;
+          background: #fff0e4;
+          color: #b95b1d;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .app-modal-process {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+
+        .app-modal-process-item {
+          display: flex;
+          align-items: center;
+          gap: 13px;
+          padding: 12px 14px;
+          background: #f8f9fa;
+          border-radius: 8px;
+          color: #555;
+          font-size: 13px;
+        }
+
+        .app-modal-process-item strong {
+          color: var(--app-primary);
+          font-size: 15px;
+        }
+
+        .app-modal-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 15px;
+          padding: 20px 32px 28px;
+          border-top: 1px solid #eee;
+        }
+
+        .app-modal-footer p {
+          color: #777;
+          font-size: 13px;
+          margin: 0;
+        }
+
+        .app-modal-footer button {
+          padding: 13px 20px;
+          border: none;
+          border-radius: 7px;
+          background: var(--app-primary);
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+          transition: .2s;
+        }
+
+        .app-modal-footer button:hover {
+          background: var(--app-dark);
+          transform: translateY(-2px);
         }
 
         /* PLATFORMS */
 
-        .app-platforms {
-          padding: 95px 8%;
-        }
+        .app-platforms { padding: 95px 8%; }
 
         .app-platform-grid {
           display: grid;
@@ -579,23 +921,20 @@ const ApplicationDev = () => {
           text-align: center;
           padding: 35px 25px;
           border: 1px solid #eee;
-          border-radius: 10px;
-          transition: .3s;
+          border-radius: 12px;
+          transition: .25s;
           height: 100%;
         }
 
         .app-platform-card:hover {
           border-color: var(--app-primary);
           box-shadow: 0 12px 30px rgba(0,0,0,.08);
+          transform: translateY(-6px);
         }
 
         .app-platform-icon {
           font-size: 55px;
           margin-bottom: 20px;
-        }
-
-        .app-platform-card h3 {
-          margin-bottom: 12px;
         }
 
         .app-platform-card p {
@@ -635,7 +974,7 @@ const ApplicationDev = () => {
           border: 1px solid #eee;
           border-radius: 8px;
           font-weight: bold;
-          transition: .3s;
+          transition: .25s;
         }
 
         .app-tech-card span {
@@ -646,6 +985,7 @@ const ApplicationDev = () => {
         .app-tech-card:hover {
           background: var(--app-dark);
           color: white;
+          transform: translateY(-5px);
         }
 
         /* WHY CHOOSE US */
@@ -660,9 +1000,7 @@ const ApplicationDev = () => {
           align-items: center;
         }
 
-        .app-why-content > p {
-          color: #ccc;
-        }
+        .app-why-content > p { color: #ccc; }
 
         .app-reasons {
           display: grid;
@@ -676,12 +1014,10 @@ const ApplicationDev = () => {
           gap: 10px;
           font-size: 14px;
           line-height: 1.6;
-          transition: .3s;
+          transition: .2s;
         }
 
-        .app-reason:hover {
-          transform: translateX(5px);
-        }
+        .app-reason:hover { transform: translateX(5px); }
 
         .app-reason span {
           color: #ff9a43;
@@ -694,32 +1030,22 @@ const ApplicationDev = () => {
           background: var(--app-primary);
           border-radius: 12px;
           text-align: center;
-          transition: .3s;
+          transition: .25s;
         }
 
-        .app-why-box:hover {
-          transform: translateY(-8px);
-        }
-
-        .app-why-icon {
-          font-size: 65px;
-          margin-bottom: 20px;
-        }
+        .app-why-box:hover { transform: translateY(-7px); }
+        .app-why-icon { font-size: 65px; margin-bottom: 20px; }
 
         .app-why-box h3 {
           font-size: 25px;
           line-height: 1.4;
         }
 
-        .app-why-box p {
-          line-height: 1.7;
-        }
+        .app-why-box p { line-height: 1.7; }
 
         /* PROCESS */
 
-        .app-process {
-          padding: 95px 8%;
-        }
+        .app-process { padding: 95px 8%; }
 
         .app-process-grid {
           display: grid;
@@ -731,13 +1057,14 @@ const ApplicationDev = () => {
           padding: 25px 20px;
           border: 1px solid #eee;
           border-radius: 8px;
-          transition: .3s;
+          transition: .25s;
           height: 100%;
         }
 
         .app-process-card:hover {
           border-color: var(--app-primary);
           box-shadow: 0 10px 25px rgba(0,0,0,.06);
+          transform: translateY(-6px);
         }
 
         .app-step-number {
@@ -746,9 +1073,7 @@ const ApplicationDev = () => {
           font-weight: 800;
         }
 
-        .app-process-card h3 {
-          margin: 15px 0 10px;
-        }
+        .app-process-card h3 { margin: 15px 0 10px; }
 
         .app-process-card p {
           color: #777;
@@ -762,10 +1087,10 @@ const ApplicationDev = () => {
           padding: 85px 8%;
           text-align: center;
           color: white;
-          background: var(--app-primary);
+          background: linear-gradient(120deg, #d66e30, #b65017);
         }
 
-        .app-cta > span {
+        .app-cta > div > span {
           font-size: 13px;
           letter-spacing: 2px;
           font-weight: bold;
@@ -835,9 +1160,7 @@ const ApplicationDev = () => {
         }
 
         .app-contact-detail h4,
-        .app-contact-detail p {
-          margin: 4px 0;
-        }
+        .app-contact-detail p { margin: 4px 0; }
 
         .app-contact-detail p {
           color: #777;
@@ -847,7 +1170,7 @@ const ApplicationDev = () => {
         .app-contact-form {
           padding: 35px;
           background: white;
-          border-radius: 10px;
+          border-radius: 12px;
           box-shadow: 0 10px 35px rgba(0,0,0,.06);
         }
 
@@ -863,11 +1186,11 @@ const ApplicationDev = () => {
           padding: 14px;
           margin-bottom: 16px;
           border: 1px solid #ddd;
-          border-radius: 5px;
+          border-radius: 6px;
           outline: none;
           font-size: 14px;
           font-family: inherit;
-          transition: .3s;
+          transition: .2s;
         }
 
         .app-contact-form input:focus,
@@ -877,9 +1200,7 @@ const ApplicationDev = () => {
           box-shadow: 0 0 0 3px rgba(214,110,30,.1);
         }
 
-        .app-contact-form textarea {
-          resize: vertical;
-        }
+        .app-contact-form textarea { resize: vertical; }
 
         .app-contact-form button {
           width: 100%;
@@ -887,11 +1208,11 @@ const ApplicationDev = () => {
           background: var(--app-primary);
           color: white;
           border: none;
-          border-radius: 5px;
+          border-radius: 6px;
           font-size: 15px;
           font-weight: bold;
           cursor: pointer;
-          transition: .3s;
+          transition: .2s;
         }
 
         .app-contact-form button:hover {
@@ -907,16 +1228,11 @@ const ApplicationDev = () => {
           font-size: 13px;
         }
 
-        /* TABLET */
+        /* RESPONSIVE */
 
         @media(max-width: 992px) {
-          .app-hero {
-            padding: 80px 5%;
-          }
-
-          .app-hero h1 {
-            font-size: 42px;
-          }
+          .app-hero { padding: 80px 5%; }
+          .app-hero h1 { font-size: 42px; }
 
           .app-service-grid,
           .app-platform-grid {
@@ -939,8 +1255,6 @@ const ApplicationDev = () => {
           }
         }
 
-        /* MOBILE */
-
         @media(max-width: 600px) {
           .app-hero {
             flex-direction: column;
@@ -948,13 +1262,8 @@ const ApplicationDev = () => {
             text-align: center;
           }
 
-          .app-hero h1 {
-            font-size: 34px;
-          }
-
-          .app-hero-buttons {
-            justify-content: center;
-          }
+          .app-hero h1 { font-size: 34px; }
+          .app-hero-buttons { justify-content: center; }
 
           .app-hero-visual {
             width: 100%;
@@ -979,18 +1288,14 @@ const ApplicationDev = () => {
             font-size: 29px;
           }
 
-          .app-about-visual {
-            min-height: 280px;
-          }
+          .app-about-visual { min-height: 280px; }
 
           .app-about-circle {
             width: 180px;
             height: 180px;
           }
 
-          .app-about-circle span {
-            font-size: 75px;
-          }
+          .app-about-circle span { font-size: 75px; }
 
           .app-services,
           .app-platforms,
@@ -999,12 +1304,11 @@ const ApplicationDev = () => {
             padding: 65px 6%;
           }
 
-          .app-section-heading h2 {
-            font-size: 28px;
-          }
+          .app-section-heading h2 { font-size: 28px; }
 
           .app-service-grid,
-          .app-platform-grid {
+          .app-platform-grid,
+          .app-process-grid {
             grid-template-columns: 1fr;
           }
 
@@ -1018,22 +1322,36 @@ const ApplicationDev = () => {
             font-size: 13px;
           }
 
-          .app-reasons,
-          .app-process-grid {
+          .app-reasons { grid-template-columns: 1fr; }
+
+          .app-cta { padding: 65px 6%; }
+          .app-cta h2 { font-size: 29px; }
+
+          .app-contact-form { padding: 25px 18px; }
+
+          .app-modal-overlay { padding: 10px; }
+
+          .app-modal {
+            max-height: 92vh;
+            border-radius: 13px;
+          }
+
+          .app-modal-header { padding: 25px 20px; padding-right: 60px; }
+          .app-modal-header h2 { font-size: 22px; }
+          .app-modal-body { padding: 23px 20px; }
+
+          .app-modal-feature-grid {
             grid-template-columns: 1fr;
+            gap: 11px;
           }
 
-          .app-cta {
-            padding: 65px 6%;
+          .app-modal-footer {
+            padding: 18px 20px 22px;
+            flex-direction: column;
+            align-items: stretch;
           }
 
-          .app-cta h2 {
-            font-size: 29px;
-          }
-
-          .app-contact-form {
-            padding: 25px 18px;
-          }
+          .app-modal-footer button { width: 100%; }
         }
 
         @media(prefers-reduced-motion: reduce) {
@@ -1048,12 +1366,11 @@ const ApplicationDev = () => {
 
       {/* HERO */}
       <section className="app-hero">
-
         <motion.div
           className="app-hero-content"
-          initial={{ opacity: 0, x: -45 }}
+          initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.45 }}
         >
           <span className="app-tag">APPLICATION DEVELOPMENT</span>
 
@@ -1069,31 +1386,21 @@ const ApplicationDev = () => {
           </p>
 
           <div className="app-hero-buttons">
-            <motion.a
-              href="#app-services"
-              className="app-btn"
-              whileHover={{ y: -5, scale: 1.03 }}
-              whileTap={{ scale: 0.96 }}
-            >
+            <a href="#app-services" className="app-btn">
               Explore Services →
-            </motion.a>
+            </a>
 
-            <motion.a
-              href="#app-contact"
-              className="app-btn app-btn-outline"
-              whileHover={{ y: -5, scale: 1.03 }}
-              whileTap={{ scale: 0.96 }}
-            >
+            <a href="#app-contact" className="app-btn app-btn-outline">
               Get In Touch
-            </motion.a>
+            </a>
           </div>
         </motion.div>
 
         <motion.div
           className="app-hero-visual"
-          initial={{ opacity: 0, x: 45 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="app-phone">
             <div className="app-phone-top">
@@ -1103,7 +1410,6 @@ const ApplicationDev = () => {
 
             <div className="app-phone-content">
               <div className="app-phone-logo">A</div>
-
               <h3>Welcome Back!</h3>
               <p>Your Business App</p>
 
@@ -1131,9 +1437,7 @@ const ApplicationDev = () => {
                 </div>
               </div>
 
-              <button className="app-phone-button">
-                Get Started
-              </button>
+              <button className="app-phone-button">Get Started</button>
             </div>
           </div>
 
@@ -1147,10 +1451,7 @@ const ApplicationDev = () => {
       {/* ABOUT */}
       <section className="app-about">
         <Reveal>
-          <motion.div
-            className="app-about-visual"
-            whileHover={{ scale: 1.02 }}
-          >
+          <motion.div className="app-about-visual" whileHover={{ scale: 1.02 }}>
             <div className="app-about-circle">
               <span>📲</span>
             </div>
@@ -1162,7 +1463,7 @@ const ApplicationDev = () => {
           </motion.div>
         </Reveal>
 
-        <Reveal delay={0.15}>
+        <Reveal delay={0.1}>
           <div className="app-about-content">
             <span className="app-tag">ABOUT OUR SERVICE</span>
 
@@ -1183,13 +1484,9 @@ const ApplicationDev = () => {
               performance for users.
             </p>
 
-            <motion.a
-              href="#app-services"
-              className="app-text-link"
-              whileHover={{ x: 6 }}
-            >
+            <a href="#app-services" className="app-text-link">
               Discover Our Services →
-            </motion.a>
+            </a>
           </div>
         </Reveal>
       </section>
@@ -1201,32 +1498,127 @@ const ApplicationDev = () => {
             <span className="app-tag">WHAT WE OFFER</span>
             <h2>Our Application Development Services</h2>
             <p>
-              We provide complete mobile application solutions
-              for different business needs.
+              Click on any service to explore its details,
+              features, technologies and development process.
             </p>
           </div>
         </Reveal>
 
         <div className="app-service-grid">
           {services.map((service, index) => (
-            <Reveal delay={(index % 3) * 0.1} key={service.title}>
-              <motion.div
+            <Reveal delay={(index % 3) * 0.07} key={service.title}>
+              <motion.button
+                type="button"
                 className="app-service-card"
-                whileHover={{ y: -9, scale: 1.02 }}
+                onClick={() => setSelectedService(service)}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="app-service-icon">
-                  {service.icon}
-                </div>
+                <div className="app-service-icon">{service.icon}</div>
 
                 <h3>{service.title}</h3>
                 <p>{service.desc}</p>
 
-                <a href="#app-contact">Learn More →</a>
-              </motion.div>
+                <span className="app-learn-more">
+                  View Details <span>→</span>
+                </span>
+              </motion.button>
             </Reveal>
           ))}
         </div>
       </section>
+
+      {/* SERVICE DETAILS MODAL */}
+      <AnimatePresence initial={false}>
+        {selectedService && (
+          <motion.div
+            className="app-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedService(null);
+              }
+            }}
+          >
+            <motion.div
+              className="app-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="app-modal-title"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+            >
+              <div className="app-modal-header">
+                <button
+                  type="button"
+                  className="app-modal-close"
+                  onClick={() => setSelectedService(null)}
+                  aria-label="Close modal"
+                >
+                  ×
+                </button>
+
+                <div className="app-modal-icon">
+                  {selectedService.icon}
+                </div>
+
+                <span className="app-tag">OUR APPLICATION SERVICE</span>
+
+                <h2 id="app-modal-title">
+                  {selectedService.title}
+                </h2>
+
+                <p>{selectedService.desc}</p>
+              </div>
+
+              <div className="app-modal-body">
+                <h3>About This Service</h3>
+                <p className="app-modal-description">
+                  {selectedService.details}
+                </p>
+
+                <h3>What We Provide</h3>
+                <div className="app-modal-feature-grid">
+                  {selectedService.features.map((feature, index) => (
+                    <div className="app-modal-feature" key={index}>
+                      <span>✓</span>
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+
+                <h3>Technologies We Use</h3>
+                <div className="app-modal-tech">
+                  {selectedService.technologies.map((tech) => (
+                    <span key={tech}>{tech}</span>
+                  ))}
+                </div>
+
+                <h3>Our Development Process</h3>
+                <div className="app-modal-process">
+                  {selectedService.process.map((step, index) => (
+                    <div className="app-modal-process-item" key={index}>
+                      <strong>0{index + 1}</strong>
+                      <span>{step}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="app-modal-footer">
+                <p>Have a project idea? Let's discuss it.</p>
+                <button type="button" onClick={goToContact}>
+                  Get A Free Quote →
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* PLATFORMS */}
       <section className="app-platforms">
@@ -1243,15 +1635,12 @@ const ApplicationDev = () => {
 
         <div className="app-platform-grid">
           {platforms.map((platform, index) => (
-            <Reveal delay={index * 0.12} key={platform.title}>
+            <Reveal delay={index * 0.08} key={platform.title}>
               <motion.div
                 className="app-platform-card"
-                whileHover={{ y: -8, scale: 1.02 }}
+                whileHover={{ y: -6 }}
               >
-                <div className="app-platform-icon">
-                  {platform.icon}
-                </div>
-
+                <div className="app-platform-icon">{platform.icon}</div>
                 <h3>{platform.title}</h3>
                 <p>{platform.desc}</p>
                 <span>{platform.tag}</span>
@@ -1276,10 +1665,10 @@ const ApplicationDev = () => {
 
         <div className="app-tech-grid">
           {technologies.map((tech, index) => (
-            <Reveal delay={(index % 4) * 0.08} key={tech}>
+            <Reveal delay={(index % 4) * 0.06} key={tech}>
               <motion.div
                 className="app-tech-card"
-                whileHover={{ y: -6, scale: 1.04 }}
+                whileHover={{ y: -5 }}
               >
                 <span>✦</span>
                 {tech}
@@ -1307,25 +1696,20 @@ const ApplicationDev = () => {
             </p>
 
             <div className="app-reasons">
-              {reasons.map((reason, index) => (
-                <Reveal delay={index * 0.08} key={reason}>
-                  <motion.div
-                    className="app-reason"
-                    whileHover={{ x: 5 }}
-                  >
-                    <span>✓</span>
-                    {reason}
-                  </motion.div>
-                </Reveal>
+              {reasons.map((reason) => (
+                <div className="app-reason" key={reason}>
+                  <span>✓</span>
+                  {reason}
+                </div>
               ))}
             </div>
           </div>
         </Reveal>
 
-        <Reveal delay={0.2}>
+        <Reveal delay={0.1}>
           <motion.div
             className="app-why-box"
-            whileHover={{ y: -8, scale: 1.02 }}
+            whileHover={{ y: -7 }}
           >
             <div className="app-why-icon">🚀</div>
             <h3>Build Your Next Great App With Us</h3>
@@ -1352,15 +1736,12 @@ const ApplicationDev = () => {
 
         <div className="app-process-grid">
           {steps.map((step, index) => (
-            <Reveal delay={index * 0.1} key={step.number}>
+            <Reveal delay={index * 0.07} key={step.number}>
               <motion.div
                 className="app-process-card"
-                whileHover={{ y: -7 }}
+                whileHover={{ y: -6 }}
               >
-                <span className="app-step-number">
-                  {step.number}
-                </span>
-
+                <span className="app-step-number">{step.number}</span>
                 <h3>{step.title}</h3>
                 <p>{step.desc}</p>
               </motion.div>
@@ -1372,7 +1753,7 @@ const ApplicationDev = () => {
       {/* CTA */}
       <section className="app-cta">
         <Reveal>
-          <motion.div variants={{}}>
+          <div>
             <span>LET'S BUILD YOUR APPLICATION</span>
 
             <h2>Have An Amazing App Idea?</h2>
@@ -1382,15 +1763,10 @@ const ApplicationDev = () => {
               application that helps your business grow.
             </p>
 
-            <motion.a
-              href="#app-contact"
-              className="app-btn app-cta-btn"
-              whileHover={{ scale: 1.06, y: -4 }}
-              whileTap={{ scale: 0.96 }}
-            >
+            <a href="#app-contact" className="app-btn app-cta-btn">
               Start Your Project →
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
         </Reveal>
       </section>
 
@@ -1400,9 +1776,7 @@ const ApplicationDev = () => {
           <div className="app-contact-info">
             <span className="app-tag">GET IN TOUCH</span>
 
-            <h2>
-              Let's Discuss Your Application Project
-            </h2>
+            <h2>Let's Discuss Your Application Project</h2>
 
             <p>
               Have an application idea? Tell us about your
@@ -1427,18 +1801,17 @@ const ApplicationDev = () => {
           </div>
         </Reveal>
 
-        <Reveal delay={0.15}>
-          <motion.form
+        <Reveal delay={0.1}>
+          <form
             className="app-contact-form"
             onSubmit={handleSubmit}
-            whileHover={{ boxShadow: "0 15px 40px rgba(0,0,0,.09)" }}
           >
             <h3>Get A Free Quote</h3>
 
             {success && (
               <motion.div
                 className="app-form-success"
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
               >
                 Your application project request has been submitted successfully!
@@ -1486,14 +1859,10 @@ const ApplicationDev = () => {
               required
             />
 
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-            >
+            <button type="submit">
               Submit Message →
-            </motion.button>
-          </motion.form>
+            </button>
+          </form>
         </Reveal>
       </section>
 

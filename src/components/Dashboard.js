@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./../App.css";
 
 import software from "./../Assets/ww (1).19187bed19d69ed0e694.png";
@@ -17,60 +18,68 @@ const services = [
     title: "Software",
     subtitle: "Development",
     image: software,
-    description: "Custom software solutions designed to make your business smarter."
+    description: "Powerful and customized software solutions for your business.",
+    link: "/software-dev"
   },
   {
     id: 2,
     title: "Website",
     subtitle: "Development",
     image: website,
-    description: "Modern, responsive and professional websites for your brand."
+    description: "Modern, responsive and professional websites for your brand.",
+    link: "/website-dev"
   },
   {
     id: 3,
     title: "Application",
     subtitle: "Development",
     image: application,
-    description: "Powerful mobile and web applications for modern businesses."
+    description: "Smart mobile and web applications for modern businesses.",
+    link: "/application-dev"
   },
   {
     id: 4,
     title: "Access Control",
     subtitle: "Systems",
     image: accessControl,
-    description: "Smart security and access control systems for your organization."
+    description: "Smart access control and security solutions for organizations.",
+    link: "/quote"
   },
   {
     id: 5,
     title: "CCTV",
     subtitle: "Solutions",
     image: cctv,
-    description: "Professional CCTV installation and monitoring solutions."
+    description: "Professional CCTV installation and monitoring solutions.",
+    link: "/quote"
   },
   {
     id: 6,
     title: "Graphic",
     subtitle: "Designing",
     image: graphic,
-    description: "Creative graphic design and branding for your business."
+    description: "Creative graphic design and branding for your business.",
+    link: "/graphic-designing"
   },
   {
     id: 7,
     title: "Digital",
     subtitle: "Marketing",
     image: digital,
-    description: "Grow your business with effective digital marketing."
+    description: "Grow your business with effective digital marketing.",
+    link: "/digital-marketing"
   },
   {
     id: 8,
     title: "Networking",
     subtitle: "Solutions",
     image: networking,
-    description: "Reliable networking and IT infrastructure solutions."
+    description: "Reliable networking and IT infrastructure solutions.",
+    link: "/networking"
   }
 ];
 
-const Dashboard = () => {
+function Dashboard() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -82,25 +91,21 @@ const Dashboard = () => {
   const [submitted, setSubmitted] = useState(false);
   const [showTopButton, setShowTopButton] = useState(false);
 
-  // SCROLL REVEAL
   useEffect(() => {
-    const elements = document.querySelectorAll(
-      ".dashboard [data-animate]"
-    );
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           entry.target.classList.toggle(
-            "is-visible",
+            "show",
             entry.isIntersecting
           );
         });
       },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -25px 0px"
-      }
+      { threshold: 0.12 }
+    );
+
+    const elements = document.querySelectorAll(
+      ".dashboard-page .reveal"
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -108,17 +113,9 @@ const Dashboard = () => {
     return () => observer.disconnect();
   }, []);
 
-  // OPTIMIZED SCROLL BUTTON
   useEffect(() => {
-    let frame;
-
     const handleScroll = () => {
-      if (frame) return;
-
-      frame = requestAnimationFrame(() => {
-        setShowTopButton(window.scrollY > 350);
-        frame = null;
-      });
+      setShowTopButton(window.scrollY > 350);
     };
 
     window.addEventListener("scroll", handleScroll, {
@@ -129,7 +126,6 @@ const Dashboard = () => {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -141,12 +137,10 @@ const Dashboard = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
 
     setSubmitted(false);
   };
@@ -154,7 +148,7 @@ const Dashboard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Quote Request:", formData);
+    console.log("Project Request:", formData);
 
     setSubmitted(true);
 
@@ -168,111 +162,81 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard">
+    <div className="dashboard-page">
 
       <style>{`
 
-        .dashboard {
-          --primary: #d66e1e;
-          --orange: #ff9d52;
-          --dark: #111722;
-          --navy: #182333;
-          --muted: #78818d;
-          font-family: "Montserrat", sans-serif;
-          background: #fff;
+        .dashboard-page {
+          --orange: #e97828;
+          --orange-light: #ffab70;
+          --dark: #111b2a;
+          --muted: #748092;
+          font-family: 'Montserrat', sans-serif;
           color: var(--dark);
+          background: #fff;
           overflow: hidden;
         }
 
-        .dashboard *,
-        .dashboard *::before,
-        .dashboard *::after {
+        .dashboard-page * {
           box-sizing: border-box;
         }
 
-        .dashboard a {
+        .dashboard-page a {
           text-decoration: none;
         }
 
-        /* REVEAL ANIMATION */
+        .dashboard-page .container {
+          max-width: 1200px;
+        }
 
-        .dashboard [data-animate] {
+        /* ANIMATIONS */
+
+        .dashboard-page .reveal {
           opacity: 0;
-          transform: translateY(25px);
-          transition:
-            opacity .45s ease,
-            transform .45s cubic-bezier(.2,.8,.2,1);
+          transform: translateY(30px);
+          transition: opacity .65s ease, transform .65s ease;
         }
 
-        .dashboard [data-animate="left"] {
-          transform: translateX(-25px);
-        }
-
-        .dashboard [data-animate="right"] {
-          transform: translateX(25px);
-        }
-
-        .dashboard [data-animate].is-visible {
+        .dashboard-page .reveal.show {
           opacity: 1;
-          transform: translate(0,0);
+          transform: translateY(0);
         }
 
         /* HERO */
 
-        .dashboard .hero-section {
-          min-height: 690px;
+        .dashboard-page .hero {
+          min-height: 660px;
           display: flex;
           align-items: center;
           position: relative;
-          isolation: isolate;
-          overflow: hidden;
           background:
-            radial-gradient(ellipse at 78% 45%, rgba(214,110,30,.22), transparent 36%),
-            radial-gradient(ellipse at 5% 100%, rgba(38,91,130,.2), transparent 40%),
-            linear-gradient(115deg, #0d1420, #172536 55%, #101722);
+            radial-gradient(circle at 80% 30%, rgba(233,120,40,.22), transparent 32%),
+            linear-gradient(120deg,#101927,#1c2b3d,#111b29);
+          overflow: hidden;
         }
 
-        .dashboard .hero-section::before {
+        .dashboard-page .hero::before {
           content: "";
           position: absolute;
           inset: 0;
-          z-index: -1;
-          opacity: .11;
+          opacity: .12;
           background-image:
-            linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px);
-          background-size: 48px 48px;
-          mask-image: linear-gradient(90deg, transparent, black);
+            linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px),
+            linear-gradient(90deg,rgba(255,255,255,.15) 1px,transparent 1px);
+          background-size: 45px 45px;
         }
 
-        .dashboard .hero-section::after {
-          content: "";
-          position: absolute;
-          width: 550px;
-          height: 550px;
-          right: -170px;
-          top: -220px;
-          border: 1px solid rgba(255,255,255,.07);
-          border-radius: 50%;
-          box-shadow:
-            0 0 0 45px rgba(255,255,255,.015),
-            0 0 0 90px rgba(255,255,255,.012);
-          pointer-events: none;
-        }
-
-        .dashboard .hero-content {
+        .dashboard-page .hero-content {
           position: relative;
-          z-index: 3;
-          width: 100%;
-          padding: 100px 0;
-          color: white;
-          animation: heroIn .65s ease-out both;
+          z-index: 2;
+          padding: 90px 0;
+          animation: heroEntry .8s ease both;
         }
 
-        @keyframes heroIn {
+        @keyframes heroEntry {
           from {
             opacity: 0;
-            transform: translateY(22px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -280,224 +244,190 @@ const Dashboard = () => {
           }
         }
 
-        .dashboard .hero-kicker {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          color: #ffb77f;
-          font-size: 11px;
+        .dashboard-page .hero-tag {
+          display: inline-block;
+          color: #ffb783;
+          font-size: 12px;
           font-weight: 800;
-          letter-spacing: 2.5px;
+          letter-spacing: 3px;
+          margin-bottom: 22px;
+        }
+
+        .dashboard-page .hero h1 {
+          color: white;
+          font-size: clamp(42px,5vw,68px);
+          font-weight: 850;
+          line-height: 1.12;
+          letter-spacing: -2px;
           margin-bottom: 25px;
         }
 
-        .dashboard .hero-kicker::before {
-          content: "";
-          width: 30px;
-          height: 2px;
-          background: var(--orange);
-        }
-
-        .dashboard .hero-content h1 {
-          max-width: 720px;
-          font-size: clamp(42px,5.5vw,72px);
-          font-weight: 850;
-          line-height: 1.1;
-          letter-spacing: -2px;
-          margin: 0 0 24px;
-        }
-
-        .dashboard .hero-content h1 span {
+        .dashboard-page .hero h1 span {
           display: block;
-          color: var(--orange);
+          color: var(--orange-light);
         }
 
-        .dashboard .hero-description {
+        .dashboard-page .hero-description {
+          color: #bac5d1;
           max-width: 560px;
-          color: #b9c3cf;
           font-size: 15px;
           line-height: 1.9;
           margin-bottom: 30px;
         }
 
-        .dashboard .hero-actions {
+        .dashboard-page .hero-buttons {
           display: flex;
           flex-wrap: wrap;
           gap: 14px;
         }
 
-        .dashboard .primary-btn,
-        .dashboard .secondary-btn {
+        .dashboard-page .hero-btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 13px;
+          gap: 12px;
           padding: 15px 25px;
           border-radius: 6px;
           font-size: 13px;
           font-weight: 800;
-          transition: .22s ease;
+          transition: .3s ease;
         }
 
-        .dashboard .primary-btn {
+        .dashboard-page .hero-primary {
+          background: var(--orange);
           color: white;
-          background: var(--primary);
-          box-shadow: 0 8px 25px rgba(214,110,30,.2);
         }
 
-        .dashboard .primary-btn:hover {
+        .dashboard-page .hero-primary:hover {
+          background: #ff9149;
           color: white;
-          background: #ec812d;
-          transform: translateY(-3px);
-          box-shadow: 0 12px 25px rgba(214,110,30,.3);
+          transform: translateY(-4px);
+          box-shadow: 0 10px 25px rgba(233,120,40,.3);
         }
 
-        .dashboard .secondary-btn {
+        .dashboard-page .hero-secondary {
+          border: 1px solid rgba(255,255,255,.3);
           color: white;
-          border: 1px solid rgba(255,255,255,.25);
-          background: rgba(255,255,255,.05);
         }
 
-        .dashboard .secondary-btn:hover {
-          color: white;
-          border-color: var(--orange);
-          background: rgba(255,255,255,.1);
-          transform: translateY(-3px);
+        .dashboard-page .hero-secondary:hover {
+          background: white;
+          color: var(--dark);
         }
 
-        .dashboard .hero-stats {
+        .dashboard-page .hero-stats {
           display: flex;
           flex-wrap: wrap;
-          gap: 35px;
-          margin-top: 55px;
+          gap: 40px;
+          margin-top: 50px;
           padding-top: 25px;
-          border-top: 1px solid rgba(255,255,255,.12);
-          max-width: 540px;
+          border-top: 1px solid rgba(255,255,255,.15);
         }
 
-        .dashboard .hero-stat strong {
+        .dashboard-page .stat strong {
           display: block;
+          font-size: 25px;
           color: white;
-          font-size: 24px;
           font-weight: 850;
         }
 
-        .dashboard .hero-stat span {
-          color: #9da9b8;
-          font-size: 11px;
+        .dashboard-page .stat span {
+          color: #aeb9c6;
+          font-size: 12px;
         }
 
-        /* HERO TECH VISUAL */
+        /* HERO VISUAL */
 
-        .dashboard .hero-visual {
-          min-height: 440px;
+        .dashboard-page .hero-visual {
+          min-height: 400px;
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
           position: relative;
-          perspective: 900px;
         }
 
-        .dashboard .tech-orbit {
-          width: 370px;
-          height: 370px;
-          position: absolute;
-          border: 1px solid rgba(255,255,255,.12);
+        .dashboard-page .orbit {
+          width: 340px;
+          height: 340px;
+          border: 1px solid rgba(255,255,255,.15);
           border-radius: 50%;
-          box-shadow: 0 0 65px rgba(214,110,30,.08);
+          position: absolute;
+          animation: orbitRotate 25s linear infinite;
         }
 
-        .dashboard .tech-orbit::before,
-        .dashboard .tech-orbit::after {
+        .dashboard-page .orbit::before,
+        .dashboard-page .orbit::after {
           content: "";
           position: absolute;
-          border: 1px solid rgba(214,110,30,.2);
+          inset: 30px;
+          border: 1px solid rgba(233,120,40,.25);
           border-radius: 50%;
         }
 
-        .dashboard .tech-orbit::before {
-          inset: 30px;
-        }
-
-        .dashboard .tech-orbit::after {
+        .dashboard-page .orbit::after {
           inset: 65px;
         }
 
-        .dashboard .tech-core {
-          width: 170px;
-          height: 170px;
+        @keyframes orbitRotate {
+          to { transform: rotate(360deg); }
+        }
+
+        .dashboard-page .hero-logo {
+          width: 155px;
+          height: 155px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 35px;
+          background: linear-gradient(145deg,#ffad70,#c65b16);
           color: white;
-          font-size: 48px;
+          border-radius: 35px;
+          font-size: 52px;
           font-weight: 900;
-          background: linear-gradient(145deg, #f18a3c, #a84e12);
-          box-shadow:
-            0 25px 70px rgba(214,110,30,.3),
-            inset 0 1px 1px rgba(255,255,255,.35);
+          box-shadow: 0 25px 65px rgba(233,120,40,.3);
           transform: rotate(-8deg);
-          position: relative;
           z-index: 2;
         }
 
-        .dashboard .tech-core span {
-          transform: rotate(8deg);
-        }
-
-        .dashboard .tech-card {
+        .dashboard-page .floating-card {
           position: absolute;
           z-index: 3;
-          padding: 15px 18px;
-          border: 1px solid rgba(255,255,255,.15);
-          border-radius: 12px;
-          background: rgba(255,255,255,.09);
-          backdrop-filter: blur(12px);
-          box-shadow: 0 15px 40px rgba(0,0,0,.15);
-        }
-
-        .dashboard .tech-card small {
-          display: block;
-          color: #aeb8c5;
-          font-size: 10px;
-          margin-bottom: 5px;
-        }
-
-        .dashboard .tech-card strong {
+          padding: 15px 19px;
+          border-radius: 10px;
           color: white;
-          font-size: 14px;
+          background: rgba(255,255,255,.1);
+          border: 1px solid rgba(255,255,255,.15);
+          backdrop-filter: blur(10px);
+          animation: floating 3s ease-in-out infinite;
         }
 
-        .dashboard .tech-card-one {
-          top: 65px;
+        .dashboard-page .floating-card strong {
+          font-size: 13px;
+        }
+
+        .dashboard-page .floating-one {
+          top: 55px;
           right: 0;
         }
 
-        .dashboard .tech-card-two {
+        .dashboard-page .floating-two {
           bottom: 55px;
           left: 0;
+          animation-delay: 1s;
         }
 
-        .dashboard .tech-dot {
-          width: 8px;
-          height: 8px;
-          display: inline-block;
-          border-radius: 50%;
-          background: #54d69b;
-          margin-right: 7px;
+        @keyframes floating {
+          50% { transform: translateY(-12px); }
         }
 
-        /* TRUST STRIP */
+        /* TRUST */
 
-        .dashboard .trust-strip {
-          background: white;
+        .dashboard-page .trust-section {
+          padding: 28px 0;
           border-bottom: 1px solid #eee;
-          box-shadow: 0 5px 25px rgba(0,0,0,.025);
+          background: #fff;
         }
 
-        .dashboard .trust-inner {
-          min-height: 90px;
+        .dashboard-page .trust-inner {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -505,634 +435,530 @@ const Dashboard = () => {
           flex-wrap: wrap;
         }
 
-        .dashboard .trust-label {
-          color: #89919b;
+        .dashboard-page .trust-label {
           font-size: 11px;
-          font-weight: 800;
-          letter-spacing: 1.5px;
+          font-weight: 850;
+          letter-spacing: 1px;
+          color: #8a929e;
         }
 
-        .dashboard .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          color: #354052;
-          font-size: 12px;
+        .dashboard-page .trust-item {
+          font-size: 13px;
           font-weight: 800;
+          color: #354154;
         }
 
-        .dashboard .trust-item span {
-          color: var(--primary);
+        .dashboard-page .trust-item span {
+          color: var(--orange);
           font-size: 19px;
+          margin-right: 7px;
         }
 
-        /* SECTION HEADINGS */
+        /* SERVICES */
 
-        .dashboard .services-section,
-        .dashboard .quote-section {
-          padding: 95px 0;
-        }
-
-        .dashboard .services-section {
+        .dashboard-page .services-section {
+          padding: 100px 0;
           background: #f7f8fa;
         }
 
-        .dashboard .section-heading {
-          max-width: 700px;
-          margin: 0 auto 50px;
+        .dashboard-page .section-heading {
           text-align: center;
+          max-width: 700px;
+          margin: 0 auto 55px;
         }
 
-        .dashboard .section-tag {
-          display: inline-block;
-          color: var(--primary);
+        .dashboard-page .section-tag {
+          color: var(--orange);
           font-size: 11px;
           font-weight: 850;
-          letter-spacing: 2.5px;
-          margin-bottom: 13px;
+          letter-spacing: 3px;
         }
 
-        .dashboard .section-heading h2 {
-          color: #182333;
+        .dashboard-page .section-heading h2 {
           font-size: 40px;
           font-weight: 850;
-          letter-spacing: -1px;
-          margin-bottom: 14px;
+          color: #192536;
+          margin: 13px 0;
         }
 
-        .dashboard .section-heading h2 span {
-          color: var(--primary);
+        .dashboard-page .section-heading h2 span {
+          color: var(--orange);
         }
 
-        .dashboard .section-heading p {
-          color: #78818d;
+        .dashboard-page .section-heading p {
           font-size: 14px;
           line-height: 1.9;
-          margin: 0;
+          color: var(--muted);
         }
 
         /* SERVICE CARDS */
 
-        .dashboard .service-card {
+        .dashboard-page .service-card {
+          display: block;
           height: 100%;
-          min-height: 330px;
+          min-height: 340px;
+          padding: 28px 23px;
           position: relative;
           overflow: hidden;
-          padding: 30px 22px;
+          border: 1px solid #e8ebef;
+          border-radius: 15px;
           background: white;
-          border: 1px solid #e9ebef;
-          border-radius: 13px;
-          transition:
-            transform .25s ease,
-            box-shadow .25s ease,
-            border-color .25s ease;
+          transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
         }
 
-        .dashboard .service-card::before {
+        .dashboard-page .service-card::before {
           content: "";
           position: absolute;
-          width: 110px;
-          height: 110px;
-          top: -65px;
-          right: -65px;
+          width: 150px;
+          height: 150px;
+          right: -80px;
+          top: -80px;
           border-radius: 50%;
-          background: rgba(214,110,30,.08);
-          transition: transform .3s ease;
+          background: rgba(233,120,40,.08);
+          transition: transform .4s ease;
         }
 
-        .dashboard .service-card::after {
+        .dashboard-page .service-card::after {
           content: "";
           position: absolute;
           bottom: 0;
           left: 22px;
           right: 22px;
           height: 3px;
-          border-radius: 10px;
-          background: linear-gradient(90deg, var(--primary), #ffb477);
+          background: linear-gradient(90deg,#e97828,#ffbd8d);
           transform: scaleX(0);
           transform-origin: left;
-          transition: transform .25s ease;
+          transition: transform .3s ease;
         }
 
-        .dashboard .service-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(214,110,30,.35);
-          box-shadow: 0 18px 40px rgba(25,35,50,.09);
+        .dashboard-page .service-card:hover {
+          transform: translateY(-10px);
+          border-color: rgba(233,120,40,.4);
+          box-shadow: 0 20px 45px rgba(25,35,50,.10);
         }
 
-        .dashboard .service-card:hover::before {
+        .dashboard-page .service-card:hover::before {
           transform: scale(2);
         }
 
-        .dashboard .service-card:hover::after {
+        .dashboard-page .service-card:hover::after {
           transform: scaleX(1);
         }
 
-        .dashboard .service-icon {
+        .dashboard-page .service-icon {
           width: 82px;
           height: 82px;
           display: flex;
           align-items: center;
           justify-content: center;
+          background: #fff2e8;
+          border-radius: 20px;
           margin-bottom: 23px;
           position: relative;
           z-index: 1;
-          border-radius: 19px;
-          background: linear-gradient(145deg, #fff7f0, #ffeadb);
-          transition: transform .25s ease;
+          transition: .3s ease;
         }
 
-        .dashboard .service-icon img {
-          width: 60px;
-          height: 60px;
+        .dashboard-page .service-icon img {
+          width: 58px;
+          height: 58px;
           object-fit: contain;
         }
 
-        .dashboard .service-card:hover .service-icon {
-          transform: translateY(-4px) scale(1.05);
+        .dashboard-page .service-card:hover .service-icon {
+          transform: scale(1.08) rotate(-4deg);
         }
 
-        .dashboard .service-card h5 {
+        .dashboard-page .service-card h5 {
           color: #192536;
           font-size: 17px;
           font-weight: 850;
           margin-bottom: 5px;
         }
 
-        .dashboard .service-card h6 {
-          color: var(--primary);
+        .dashboard-page .service-card h6 {
+          color: var(--orange);
           font-size: 13px;
-          font-weight: 750;
-          margin-bottom: 13px;
+          font-weight: 800;
+          margin-bottom: 14px;
         }
 
-        .dashboard .service-card p {
-          color: #7b8490;
+        .dashboard-page .service-card p {
+          color: #7c8795;
           font-size: 12px;
           line-height: 1.8;
-          margin-bottom: 18px;
+          margin-bottom: 20px;
         }
 
-        .dashboard .service-link {
+        .dashboard-page .service-link {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          color: #202b3a;
+          gap: 9px;
+          color: #263346;
           font-size: 12px;
           font-weight: 850;
-          transition: color .2s ease;
+          transition: .25s ease;
         }
 
-        .dashboard .service-link:hover {
-          color: var(--primary);
+        .dashboard-page .service-card:hover .service-link {
+          color: var(--orange);
+          gap: 15px;
         }
 
         /* CTA */
 
-        .dashboard .cta-section {
-          padding: 75px 0;
-          position: relative;
-          overflow: hidden;
+        .dashboard-page .cta-section {
+          padding: 80px 0;
           background:
-            radial-gradient(circle at 90% 20%, rgba(214,110,30,.23), transparent 32%),
-            linear-gradient(110deg, #111722, #202c3c);
+            radial-gradient(circle at 90% 10%,rgba(233,120,40,.2),transparent 30%),
+            linear-gradient(110deg,#111b29,#243448);
         }
 
-        .dashboard .cta-section::before {
-          content: "";
-          position: absolute;
-          width: 300px;
-          height: 300px;
-          right: -100px;
-          top: -160px;
-          border: 1px solid rgba(255,255,255,.12);
-          border-radius: 50%;
-          box-shadow: 0 0 0 35px rgba(255,255,255,.025);
-        }
-
-        .dashboard .cta-content {
+        .dashboard-page .cta-content {
           display: flex;
-          align-items: center;
           justify-content: space-between;
+          align-items: center;
           gap: 30px;
-          position: relative;
-          z-index: 1;
         }
 
-        .dashboard .cta-content span {
-          color: #ffb477;
+        .dashboard-page .cta-content span {
+          color: #ffb783;
           font-size: 11px;
           font-weight: 850;
           letter-spacing: 2px;
         }
 
-        .dashboard .cta-content h2 {
+        .dashboard-page .cta-content h2 {
           color: white;
           font-size: 36px;
           font-weight: 850;
           margin: 12px 0;
         }
 
-        .dashboard .cta-content p {
-          max-width: 570px;
-          color: #bac3ce;
+        .dashboard-page .cta-content p {
+          color: #bac5d1;
           font-size: 13px;
           line-height: 1.9;
+          max-width: 550px;
           margin: 0;
         }
 
-        .dashboard .cta-button {
-          display: inline-flex;
-          align-items: center;
-          gap: 15px;
+        .dashboard-page .cta-button {
           flex-shrink: 0;
-          padding: 16px 27px;
-          border-radius: 6px;
+          display: inline-flex;
+          padding: 16px 26px;
           color: white;
-          background: var(--primary);
+          background: var(--orange);
+          border-radius: 6px;
           font-size: 13px;
           font-weight: 850;
-          transition: .22s ease;
+          transition: .3s ease;
         }
 
-        .dashboard .cta-button:hover {
+        .dashboard-page .cta-button:hover {
+          background: white;
           color: var(--dark);
-          background: white;
-          transform: translateY(-3px);
+          transform: translateY(-4px);
         }
 
-        /* QUOTE */
+        /* CONTACT */
 
-        .dashboard .quote-section {
+        .dashboard-page .contact-section {
+          padding: 100px 0;
           background: white;
         }
 
-        .dashboard .quote-wrapper {
+        .dashboard-page .contact-wrapper {
           display: grid;
           grid-template-columns: .85fr 1.4fr;
           gap: 28px;
-          align-items: stretch;
         }
 
-        .dashboard .quote-info {
-          padding: 40px 32px;
+        .dashboard-page .contact-info {
+          padding: 40px 30px;
+          border-radius: 14px;
           color: white;
-          border-radius: 13px;
-          background:
-            radial-gradient(circle at 100% 0%, rgba(214,110,30,.25), transparent 45%),
-            linear-gradient(145deg, #172333, #101722);
+          background: linear-gradient(145deg,#1d2b3e,#101927);
         }
 
-        .dashboard .quote-info h3 {
+        .dashboard-page .contact-info h3 {
           font-size: 25px;
           font-weight: 850;
           margin-bottom: 15px;
         }
 
-        .dashboard .quote-info > p {
-          color: #bac3ce;
+        .dashboard-page .contact-info > p {
+          color: #b9c4d0;
           font-size: 13px;
           line-height: 1.9;
-          margin-bottom: 32px;
+          margin-bottom: 35px;
         }
 
-        .dashboard .contact-item {
+        .dashboard-page .contact-item {
           display: flex;
           align-items: center;
-          gap: 14px;
-          margin-bottom: 24px;
+          gap: 15px;
+          margin-bottom: 25px;
         }
 
-        .dashboard .contact-item > span {
+        .dashboard-page .contact-icon {
           width: 45px;
           height: 45px;
-          min-width: 45px;
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
           border-radius: 12px;
-          color: white;
-          background: var(--primary);
+          background: var(--orange);
           font-size: 19px;
         }
 
-        .dashboard .contact-item h6 {
+        .dashboard-page .contact-item h6 {
           font-size: 13px;
           font-weight: 850;
           margin-bottom: 5px;
         }
 
-        .dashboard .contact-item p {
-          color: #bac3ce;
+        .dashboard-page .contact-item p {
           font-size: 12px;
+          color: #b9c4d0;
           margin: 0;
         }
 
-        /* FORM */
-
-        .dashboard .quote-form-area {
-          padding: 36px;
-          border: 1px solid #eceef1;
-          border-radius: 13px;
-          background: white;
-          box-shadow: 0 12px 38px rgba(20,30,45,.055);
+        .dashboard-page .contact-form {
+          padding: 35px;
+          border: 1px solid #e9edf1;
+          border-radius: 14px;
+          box-shadow: 0 12px 35px rgba(20,30,45,.05);
         }
 
-        .dashboard .quote-form-area label {
+        .dashboard-page .contact-form label {
           display: block;
-          color: #263346;
           font-size: 12px;
           font-weight: 800;
+          color: #263346;
           margin-bottom: 9px;
         }
 
-        .dashboard .quote-form-area .form-control,
-        .dashboard .quote-form-area .form-select {
+        .dashboard-page .contact-form .form-control,
+        .dashboard-page .contact-form .form-select {
           min-height: 48px;
           padding: 12px 14px;
-          border: 1px solid #e3e6eb;
+          border: 1px solid #e2e7ed;
           border-radius: 6px;
-          background-color: #fafbfc;
+          background: #fafbfc;
           font-size: 13px;
           box-shadow: none;
-          transition: .2s ease;
         }
 
-        .dashboard .quote-form-area textarea.form-control {
+        .dashboard-page .contact-form textarea.form-control {
           min-height: 125px;
           resize: vertical;
         }
 
-        .dashboard .quote-form-area .form-control:focus,
-        .dashboard .quote-form-area .form-select:focus {
-          border-color: var(--primary);
+        .dashboard-page .contact-form .form-control:focus,
+        .dashboard-page .contact-form .form-select:focus {
+          border-color: var(--orange);
           background: white;
-          box-shadow: 0 0 0 3px rgba(214,110,30,.1);
+          box-shadow: 0 0 0 3px rgba(233,120,40,.1);
         }
 
-        .dashboard .submit-button {
+        .dashboard-page .submit-btn {
           width: 100%;
           padding: 15px;
-          border: none;
+          border: 0;
           border-radius: 6px;
           color: white;
-          background: var(--primary);
+          background: var(--orange);
           font-size: 13px;
           font-weight: 850;
           cursor: pointer;
-          transition: .2s ease;
+          transition: .3s ease;
         }
 
-        .dashboard .submit-button:hover {
+        .dashboard-page .submit-btn:hover {
           background: #192536;
-          transform: translateY(-2px);
+          transform: translateY(-3px);
         }
 
-        .dashboard .success-message {
+        .dashboard-page .success-message {
           padding: 14px;
           margin-bottom: 20px;
           border-radius: 7px;
-          color: #155724;
-          background: #d4edda;
+          background: #e0f7e9;
+          color: #176b39;
           font-size: 13px;
-          font-weight: 650;
+          font-weight: 700;
         }
 
         /* BACK TO TOP */
 
-        .dashboard .scroll-top-button {
+        .dashboard-page .top-button {
           position: fixed;
           right: 23px;
           bottom: 23px;
           z-index: 9999;
-          width: 46px;
-          height: 46px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: none;
+          width: 48px;
+          height: 48px;
+          border: 0;
           border-radius: 12px;
           color: white;
-          background: var(--primary);
+          background: var(--orange);
           font-size: 24px;
           cursor: pointer;
-          box-shadow: 0 7px 20px rgba(0,0,0,.16);
           opacity: 0;
           visibility: hidden;
-          transform: translateY(10px);
-          transition: .2s ease;
+          transform: translateY(12px);
+          transition: .3s ease;
+          box-shadow: 0 8px 22px rgba(0,0,0,.15);
         }
 
-        .dashboard .scroll-top-button.visible {
+        .dashboard-page .top-button.visible {
           opacity: 1;
           visibility: visible;
           transform: translateY(0);
         }
 
-        .dashboard .scroll-top-button:hover {
+        .dashboard-page .top-button:hover {
           background: #172333;
         }
 
-        /* TABLET */
+        /* RESPONSIVE */
 
-        @media (max-width: 991px) {
-          .dashboard .hero-section {
-            min-height: 620px;
-          }
-
-          .dashboard .hero-visual {
-            min-height: 340px;
-          }
-
-          .dashboard .tech-orbit {
-            width: 280px;
-            height: 280px;
-          }
-
-          .dashboard .tech-core {
-            width: 130px;
-            height: 130px;
-            font-size: 38px;
-          }
-
-          .dashboard .quote-wrapper {
-            grid-template-columns: 1fr;
-          }
-
-          .dashboard .cta-content h2 {
-            font-size: 30px;
-          }
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 767px) {
-          .dashboard .hero-section {
+        @media(max-width: 991px) {
+          .dashboard-page .hero {
             min-height: auto;
           }
 
-          .dashboard .hero-content {
-            padding: 85px 0 30px;
+          .dashboard-page .hero-visual {
+            min-height: 350px;
           }
 
-          .dashboard .hero-content h1 {
-            font-size: clamp(38px, 10vw, 52px);
-            letter-spacing: -1.5px;
+          .dashboard-page .contact-wrapper {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media(max-width: 767px) {
+          .dashboard-page .hero-content {
+            padding: 75px 0 25px;
           }
 
-          .dashboard .hero-description {
+          .dashboard-page .hero h1 {
+            font-size: 42px;
+          }
+
+          .dashboard-page .hero-description {
             font-size: 13px;
           }
 
-          .dashboard .hero-stats {
-            gap: 24px;
-            margin-top: 35px;
+          .dashboard-page .hero-stats {
+            gap: 23px;
           }
 
-          .dashboard .hero-stat strong {
-            font-size: 21px;
-          }
-
-          .dashboard .hero-visual {
-            min-height: 310px;
+          .dashboard-page .hero-visual {
+            min-height: 300px;
             margin-bottom: 35px;
           }
 
-          .dashboard .tech-orbit {
+          .dashboard-page .orbit {
             width: 250px;
             height: 250px;
           }
 
-          .dashboard .tech-core {
-            width: 115px;
-            height: 115px;
-            border-radius: 25px;
-            font-size: 34px;
+          .dashboard-page .hero-logo {
+            width: 120px;
+            height: 120px;
+            font-size: 40px;
           }
 
-          .dashboard .tech-card-one {
-            right: 2%;
-            top: 25px;
-          }
-
-          .dashboard .tech-card-two {
-            left: 1%;
-            bottom: 25px;
-          }
-
-          .dashboard .trust-inner {
+          .dashboard-page .trust-inner {
             justify-content: center;
-            padding: 22px 0;
           }
 
-          .dashboard .trust-label {
+          .dashboard-page .trust-label {
             width: 100%;
             text-align: center;
           }
 
-          .dashboard .trust-item {
-            font-size: 10px;
+          .dashboard-page .trust-item {
+            font-size: 11px;
           }
 
-          .dashboard .services-section,
-          .dashboard .quote-section {
+          .dashboard-page .services-section,
+          .dashboard-page .contact-section {
             padding: 65px 0;
           }
 
-          .dashboard .section-heading {
-            margin-bottom: 35px;
-          }
-
-          .dashboard .section-heading h2 {
+          .dashboard-page .section-heading h2 {
             font-size: 30px;
           }
 
-          .dashboard .section-heading p {
-            font-size: 12px;
+          .dashboard-page .service-card {
+            min-height: 310px;
+            padding: 22px 14px;
           }
 
-          .dashboard .service-card {
-            min-height: 295px;
-            padding: 22px 12px;
+          .dashboard-page .service-icon {
+            width: 65px;
+            height: 65px;
           }
 
-          .dashboard .service-icon {
-            width: 68px;
-            height: 68px;
-            margin-bottom: 17px;
+          .dashboard-page .service-icon img {
+            width: 48px;
+            height: 48px;
           }
 
-          .dashboard .service-icon img {
-            width: 50px;
-            height: 50px;
-          }
-
-          .dashboard .service-card h5 {
+          .dashboard-page .service-card h5 {
             font-size: 14px;
           }
 
-          .dashboard .service-card h6 {
+          .dashboard-page .service-card h6 {
             font-size: 11px;
           }
 
-          .dashboard .service-card p {
+          .dashboard-page .service-card p {
             font-size: 10px;
           }
 
-          .dashboard .service-link {
-            font-size: 11px;
+          .dashboard-page .service-link {
+            font-size: 10px;
           }
 
-          .dashboard .cta-section {
-            padding: 55px 0;
-          }
-
-          .dashboard .cta-content {
-            align-items: flex-start;
+          .dashboard-page .cta-content {
             flex-direction: column;
+            align-items: flex-start;
           }
 
-          .dashboard .cta-content h2 {
-            font-size: 27px;
+          .dashboard-page .cta-content h2 {
+            font-size: 28px;
           }
 
-          .dashboard .quote-info {
-            padding: 30px 23px;
-          }
-
-          .dashboard .quote-form-area {
+          .dashboard-page .contact-form {
             padding: 23px 16px;
           }
         }
 
-        /* ACCESSIBILITY */
-
-        @media (prefers-reduced-motion: reduce) {
-          .dashboard *,
-          .dashboard *::before,
-          .dashboard *::after {
+        @media(prefers-reduced-motion: reduce) {
+          .dashboard-page *,
+          .dashboard-page *::before,
+          .dashboard-page *::after {
             animation: none !important;
             transition: none !important;
-          }
-
-          .dashboard [data-animate] {
-            opacity: 1;
-            transform: none;
           }
         }
 
       `}</style>
 
-      {/* HERO SECTION */}
+      {/* HERO */}
 
-      <section className="hero-section">
+      <section className="hero">
         <div className="container">
           <div className="row align-items-center">
 
             <div className="col-lg-7">
               <div className="hero-content">
 
-                <div className="hero-kicker">
+                <div className="hero-tag">
                   NEXT GENERATION IT SOLUTIONS
                 </div>
 
@@ -1147,28 +973,28 @@ const Dashboard = () => {
                   security and reliable IT solutions.
                 </p>
 
-                <div className="hero-actions">
-                  <a href="/AboutUs" className="primary-btn">
-                    Explore Our Company <span>↗</span>
+                <div className="hero-buttons">
+                  <a href="#services" className="hero-btn hero-primary">
+                    Explore Services ↗
                   </a>
 
-                  <a href="#quote" className="secondary-btn">
-                    Let's Talk <span>→</span>
+                  <a href="#contact" className="hero-btn hero-secondary">
+                    Let's Talk →
                   </a>
                 </div>
 
                 <div className="hero-stats">
-                  <div className="hero-stat">
+                  <div className="stat">
                     <strong>08+</strong>
                     <span>IT Services</span>
                   </div>
 
-                  <div className="hero-stat">
+                  <div className="stat">
                     <strong>100%</strong>
                     <span>Client Focus</span>
                   </div>
 
-                  <div className="hero-stat">
+                  <div className="stat">
                     <strong>24/7</strong>
                     <span>Digital Support</span>
                   </div>
@@ -1180,19 +1006,19 @@ const Dashboard = () => {
             <div className="col-lg-5">
               <div className="hero-visual">
 
-                <div className="tech-orbit"></div>
+                <div className="orbit"></div>
 
-                <div className="tech-core">
-                  <span>C</span>
-                </div>
+                <div className="hero-logo">IT</div>
 
-                <div className="tech-card tech-card-one">
+                <div className="floating-card floating-one">
                   <small>OUR TECHNOLOGY</small>
+                  <br />
                   <strong>Smart Solutions</strong>
                 </div>
 
-                <div className="tech-card tech-card-two">
-                  <small><span className="tech-dot"></span> SYSTEM STATUS</small>
+                <div className="floating-card floating-two">
+                  <small>✓ SYSTEM STATUS</small>
+                  <br />
                   <strong>Innovation Active</strong>
                 </div>
 
@@ -1203,9 +1029,9 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* TRUST STRIP */}
+      {/* TRUST */}
 
-      <section className="trust-strip">
+      <section className="trust-section">
         <div className="container">
           <div className="trust-inner">
 
@@ -1231,10 +1057,10 @@ const Dashboard = () => {
 
       {/* SERVICES */}
 
-      <section className="services-section">
+      <section className="services-section" id="services">
         <div className="container">
 
-          <div className="section-heading" data-animate="up">
+          <div className="section-heading reveal">
             <span className="section-tag">WHAT WE DO</span>
 
             <h2>
@@ -1243,22 +1069,34 @@ const Dashboard = () => {
 
             <p>
               We combine creativity, technology and expertise
-              to deliver digital solutions that help businesses
-              move forward.
+              to deliver professional digital solutions that
+              help your business grow.
             </p>
           </div>
 
           <div className="row g-4">
+
             {services.map((service, index) => (
               <div
-                className="col-6 col-md-4 col-lg-3"
+                className="col-6 col-md-4 col-lg-3 reveal"
                 key={service.id}
-                data-animate="up"
                 style={{
-                  transitionDelay: `${Math.min(index * 35, 140)}ms`
+                  transitionDelay: `${Math.min(index * 50, 250)}ms`
                 }}
               >
-                <div className="service-card">
+
+                <Link
+                  to={service.link === "/quote" ? "#quote" : service.link}
+                  onClick={(e) => {
+                    if (service.link === "/quote") {
+                      e.preventDefault();
+                      document.getElementById("contact")?.scrollIntoView({
+                        behavior: "smooth"
+                      });
+                    }
+                  }}
+                  className="service-card"
+                >
 
                   <div className="service-icon">
                     <img
@@ -1269,19 +1107,21 @@ const Dashboard = () => {
                   </div>
 
                   <h5>{service.title}</h5>
+
                   <h6>{service.subtitle}</h6>
 
                   <p>{service.description}</p>
 
-                  <a href="#quote" className="service-link">
+                  <span className="service-link">
                     Discover Service <span>→</span>
-                  </a>
+                  </span>
 
-                </div>
+                </Link>
+
               </div>
             ))}
-          </div>
 
+          </div>
         </div>
       </section>
 
@@ -1292,7 +1132,7 @@ const Dashboard = () => {
 
           <div className="cta-content">
 
-            <div data-animate="left">
+            <div className="reveal">
               <span>LET'S CREATE SOMETHING AMAZING</span>
 
               <h2>Ready to Grow Your Business?</h2>
@@ -1303,9 +1143,9 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <div data-animate="right">
-              <a href="#quote" className="cta-button">
-                Start Your Project <span>↗</span>
+            <div className="reveal">
+              <a href="#contact" className="cta-button">
+                Start Your Project ↗
               </a>
             </div>
 
@@ -1314,12 +1154,12 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* QUOTE SECTION */}
+      {/* CONTACT */}
 
-      <section className="quote-section" id="quote">
+      <section className="contact-section" id="contact">
         <div className="container">
 
-          <div className="section-heading" data-animate="up">
+          <div className="section-heading reveal">
             <span className="section-tag">CONTACT OUR TEAM</span>
 
             <h2>
@@ -1332,9 +1172,10 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="quote-wrapper">
+          <div className="contact-wrapper">
 
-            <div className="quote-info" data-animate="left">
+            <div className="contact-info reveal">
+
               <h3>Let's Talk About Your Project</h3>
 
               <p>
@@ -1343,7 +1184,7 @@ const Dashboard = () => {
               </p>
 
               <div className="contact-item">
-                <span>✉</span>
+                <div className="contact-icon">✉</div>
                 <div>
                   <h6>Email Us</h6>
                   <p>info@example.com</p>
@@ -1351,7 +1192,7 @@ const Dashboard = () => {
               </div>
 
               <div className="contact-item">
-                <span>☎</span>
+                <div className="contact-icon">☎</div>
                 <div>
                   <h6>Call Us</h6>
                   <p>+92 XXX XXXXXXX</p>
@@ -1359,15 +1200,16 @@ const Dashboard = () => {
               </div>
 
               <div className="contact-item">
-                <span>⌖</span>
+                <div className="contact-icon">⌖</div>
                 <div>
                   <h6>Our Location</h6>
                   <p>Pakistan</p>
                 </div>
               </div>
+
             </div>
 
-            <div className="quote-form-area" data-animate="right">
+            <div className="contact-form reveal">
 
               {submitted && (
                 <div className="success-message">
@@ -1381,6 +1223,7 @@ const Dashboard = () => {
 
                   <div className="col-md-6">
                     <label htmlFor="quote-name">Full Name</label>
+
                     <input
                       id="quote-name"
                       type="text"
@@ -1395,6 +1238,7 @@ const Dashboard = () => {
 
                   <div className="col-md-6">
                     <label htmlFor="quote-email">Email Address</label>
+
                     <input
                       id="quote-email"
                       type="email"
@@ -1409,6 +1253,7 @@ const Dashboard = () => {
 
                   <div className="col-md-6">
                     <label htmlFor="quote-phone">Phone Number</label>
+
                     <input
                       id="quote-phone"
                       type="tel"
@@ -1423,6 +1268,7 @@ const Dashboard = () => {
 
                   <div className="col-md-6">
                     <label htmlFor="quote-service">Select Service</label>
+
                     <select
                       id="quote-service"
                       name="service"
@@ -1434,15 +1280,20 @@ const Dashboard = () => {
                       <option value="">Choose a service</option>
 
                       {services.map((service) => (
-                        <option key={service.id} value={service.title}>
+                        <option
+                          key={service.id}
+                          value={`${service.title} ${service.subtitle}`}
+                        >
                           {service.title} {service.subtitle}
                         </option>
                       ))}
+
                     </select>
                   </div>
 
                   <div className="col-12">
                     <label htmlFor="quote-message">Project Details</label>
+
                     <textarea
                       id="quote-message"
                       name="message"
@@ -1456,7 +1307,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="col-12">
-                    <button type="submit" className="submit-button">
+                    <button type="submit" className="submit-btn">
                       Send Project Request →
                     </button>
                   </div>
@@ -1473,10 +1324,9 @@ const Dashboard = () => {
       {/* BACK TO TOP */}
 
       <button
-        className={`scroll-top-button ${showTopButton ? "visible" : ""}`}
+        className={`top-button ${showTopButton ? "visible" : ""}`}
         onClick={scrollToTop}
-        title="Back to top"
-        aria-label="Scroll to top"
+        aria-label="Back to top"
         tabIndex={showTopButton ? 0 : -1}
       >
         ↑
@@ -1484,6 +1334,6 @@ const Dashboard = () => {
 
     </div>
   );
-};
+}
 
 export default Dashboard;

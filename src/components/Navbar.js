@@ -530,17 +530,17 @@ const Navbar = () => {
 
             <a href="tel:0483768405">
               <span className="top-contact-icon">☎</span>
-              048-3768405
+              048-376840
             </a>
 
             <a href="tel:+923030918095">
               <span className="top-contact-icon">☎</span>
-              +92-303-0918095
+              +92-303-091805
             </a>
 
             <a href="tel:+923407460699">
               <span className="top-contact-icon">☎</span>
-              +92-340-7460699
+              +92-340-746069
             </a>
 
           </div>
