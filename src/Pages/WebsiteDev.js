@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
-const orange = "rgb(214,110,30)";
+
 
 // REUSABLE SMOOTH SCROLL ANIMATION
 const AnimateSection = ({ children, className = "" }) => {
